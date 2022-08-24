@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(Freq)
+project(FrequencyDict)
+
+set (CMAKE_CXX_STANDARD 17)
 
 set(PROJECT_SOURCES
     src/main.cpp)
