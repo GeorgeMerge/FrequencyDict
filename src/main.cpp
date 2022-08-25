@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <fstream>
 
 #include "string.h"
 
@@ -21,7 +22,7 @@ void parseAndFill(const char *data, DictMap &map)
         } 
         if((!currentAlpha && !currentWord.empty()) ||
            ( currentAlpha && i == (dataLen - 1))) {
-            if (map.find(currentWord) != map.end()){
+            if(map.find(currentWord) != map.end()) {
                 map[currentWord]++;
             } else {
                 map[currentWord] = 1u;
@@ -63,21 +64,35 @@ bool readFile(const char *filename, DictVector &words)
     return true;
 }
 
+bool writeToFile(const char * file, DictVector & vector) {
+    std::ofstream stream(file);
+
+    if(!stream) {
+        return false;
+    }
+
+    for(auto entry : vector) {
+        stream << entry.second << " " << entry.first << "\n";
+    }
+
+    return true;
+}
+
 int main(int argc, const char **argv)
 {
-    if (argc != 2) {
-        std::cout << "Wrong usage. Give file name as the only parameter" << std::endl;
+    if (argc != 3) {
+        std::cout << "Wrong usage. Give file names of input and output files" << std::endl;
         return EXIT_FAILURE;
     }
 
     DictVector words;
     if (!readFile(argv[1], words)) {
-        std::cout << "Given file can't be read" << std::endl;
+        std::cout << "'" << argv[1] << "' can't be read" << std::endl;
         return EXIT_FAILURE;
     }
 
     if (words.size() == 0) {
-        std::cout << "Given file contains no words" << std::endl;
+        std::cout << "'" << argv[1] << "' contains no words" << std::endl;
         return EXIT_SUCCESS;
     }
 
@@ -91,10 +106,10 @@ int main(int argc, const char **argv)
         } 
     });
 
-    for (const auto &v : words) {
-        std::cout << v.second << " " << v.first << "\n";
+    if(!writeToFile(argv[2], words)) {
+        std::cout << "Can't write to '" << argv[2] << "'" << std::endl;
+        return EXIT_FAILURE;
     }
-    std::cout << std::flush;
 
     return EXIT_SUCCESS;
 }

@@ -11,4 +11,4 @@ A quick single-threaded solution to count number of every unique word in a given
 
 ## Run
 
-    bin/freq data/in.txt
+    bin/freq data/in.txt out.txt
